@@ -32,7 +32,7 @@ const products3 = [
   { id: 8, name: "Library Stool Chair", price: "$20", tag: "", image: "/chair/1 (4).png" },
 ];
 
-const FeaturedProducts = () => {
+const Products = () => {
   return (
     <div className="container mx-auto py-16 pl-24 pr-28">
       <h2 className="text-2xl font-bold mb-6">Featured Products</h2>
@@ -127,7 +127,7 @@ const FeaturedProducts = () => {
   );
 };
 
-export default FeaturedProducts;
+export default Products;
 
 
 
