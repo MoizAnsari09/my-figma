@@ -4,8 +4,8 @@ import Image from "next/image";
 
 const Banner = () => {
   // Click handler function
-  const handleClick = (item: any) => {
-    console.log(item);
+  const handleClick = (): void => {
+    console.log("Shop Now button clicked");
   };
 
   return (

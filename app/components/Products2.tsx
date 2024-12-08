@@ -5,7 +5,8 @@ import Image from "next/image";
 const Products2 = () => {
   const [email, setEmail] = useState("");
 
-  const handleSubmit = (e: any) => {
+  // Update the type of the event to be more specific
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Submitted email:", email);
     setEmail("");
