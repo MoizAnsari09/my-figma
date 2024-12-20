@@ -6,7 +6,7 @@ import Navbar2 from "../../components/Navbar2";
 import Footer2 from "../../components/Footer2";
 
 const products1 = [
-  { id: 1, name: "Product Name 1", price: "$20.00", tag: "New", image: "/chair/image.png" },
+  { id: 1, name: "Product Name 1", price: "$20.00", tag: "New", image: "/chair/0.png" },
 ];
 
 const products = [
