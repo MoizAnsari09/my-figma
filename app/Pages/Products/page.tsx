@@ -1,65 +1,90 @@
+"use client";
+
+import Swal from "sweetalert2";
+import { client } from "@/sanity/lib/client";
+import { AllProducts } from "@/sanity/lib/queries";
+import { Product } from "@/types/products";
 import Image from "next/image";
-import Footer from "../../components/Footer";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Navbar2 from "../../components/Navbar2";
 import Footer2 from "../../components/Footer2";
-import Products2 from "@/app/components/Products2";
+import Link from "next/link";
+import { addToCart } from "../../actions/actions";
+import { urlFor } from "@/sanity/lib/image";
 
-const products = [
-  { id: 1, name: "Library Stool Chair", price: "$20", tag: "New", image: "/chair/1 (1).png" },
-  { id: 2, name: "Library Stool Chair", price: "$20", tag: "Sale", image: "/chair/1 (2).png" },
-  { id: 3, name: "Library Stool Chair", price: "$20", tag: "", image: "/chair/1 (3).png" },
-  { id: 4, name: "Library Stool Chair", price: "$20", tag: "", image: "/chair/1 (4).png" },
-  { id: 5, name: "Library Stool Chair", price: "$20", tag: "New", image: "/chair/1 (1).png" },
-  { id: 6, name: "Library Stool Chair", price: "$20", tag: "Sale", image: "/chair/1 (2).png" },
-  { id: 7, name: "Library Stool Chair", price: "$20", tag: "", image: "/chair/1 (3).png" },
-  { id: 8, name: "Library Stool Chair", price: "$20", tag: "", image: "/chair/1 (4).png" },
-  { id: 9, name: "Library Stool Chair", price: "$20", tag: "New", image: "/chair/1 (1).png" },
-  { id: 10, name: "Library Stool Chair", price: "$20", tag: "Sale", image: "/chair/1 (2).png" },
-  { id: 11, name: "Library Stool Chair", price: "$20", tag: "", image: "/chair/1 (3).png" },
-  { id: 12, name: "Library Stool Chair", price: "$20", tag: "", image: "/chair/1 (4).png" },
-];
+const Home = () => {
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
 
-export default function Home() {
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        // Fetch all products from Sanity
+        const fetchedAllProducts: Product[] = await client.fetch(AllProducts);
+        setAllProducts(fetchedAllProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    }
+    fetchProducts();
+  }, []);
+
+  const handleAddToCart = (e: React.MouseEvent, product: Product) => {
+    e.preventDefault();
+    Swal.fire({
+      position: "top-right",
+      icon: "success",
+      title: `${product.title} added to cart`,
+      showConfirmButton: false,
+      timer: 1000,
+    });
+    addToCart(product);
+  };
+
+  const renderProducts = (products: Product[], title: string) => (
+    <section className="mb-16 py-8">
+      <h2 className="text-4xl font-semibold text-center mb-12 text-gray-800">{title}</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+        {products.map((product) => (
+          <Link href={`/product/${product.slug.current}`} key={product._id}>
+            <div className="bg-white shadow-lg rounded-lg p-4 transform transition duration-300 hover:shadow-xl hover:scale-105 cursor-pointer hover:bg-gray-100">
+              {product.image && (
+                <div className="relative w-full h-56 mb-4 overflow-hidden rounded-lg">
+                  <Image
+                    src={urlFor(product.image).url()}
+                    alt={product.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
+                </div>
+              )}
+              <h3 className="mt-2 text-lg font-semibold text-gray-800">{product.title}</h3>
+              <p className="text-gray-500 mt-1 text-sm">Price: ${product.price}</p>
+              <button
+                className="mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-xl hover:scale-110 transition-transform duration-300 ease-in-out w-full"
+                onClick={(e) => handleAddToCart(e, product)}
+              >
+                Add to Cart
+              </button>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+
   return (
     <div>
       <Navbar />
       <Navbar2 />
-
-      {/* Featured Products Section */}
-      <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold mb-6 text-center sm:text-left">Featured Products</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white shadow-md p-4 rounded-md hover:shadow-lg transition-shadow"
-            >
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={300}
-                height={300}
-                className="rounded-md"
-              />
-              <h3 className="mt-4 text-lg font-medium">{product.name}</h3>
-              <p className="text-gray-500">{product.price}</p>
-              {product.tag && (
-                <span className="text-sm bg-green-100 px-2 py-1 rounded-full">
-                  {product.tag}
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
+      <div className="container mx-auto py-16 px-6">
+        {/* Render all products */}
+        {renderProducts(allProducts, "All Products")}
       </div>
-
-      {/* Newsletter and Instagram Section */}
-      <Products2 />
-
-      {/* Footer */}
-      <Footer />
       <Footer2 />
     </div>
   );
-}
+};
+
+export default Home;
