@@ -1,4 +1,4 @@
-'use client'; // Add this line at the top to make the component a client-side component
+'use client';
 
 import { Product } from "@/types/products";
 import { client } from "@/sanity/lib/client";
@@ -30,8 +30,12 @@ async function getProduct(slug: string): Promise<Product | null> {
   );
 }
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-  const { slug } = params; // Ensure params is awaited
+interface ProductPageProps {
+  params: { slug: string };
+}
+
+export default function ProductPage({ params }: ProductPageProps) {
+  const { slug } = params;
 
   // Fetch the product
   const [product, setProduct] = React.useState<Product | null>(null);
