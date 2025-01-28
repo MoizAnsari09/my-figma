@@ -28,48 +28,30 @@ async function getProduct(slug: string): Promise<Product | null> {
     { slug }
   );
 }
-
 interface ProductPageProps {
-  params: Promise<{ slug: string }>; // Adjusted type
+  params: { slug: string }; // Removed Promise
 }
 
+
 export default function ProductPage({ params }: ProductPageProps) {
-  const [slug, setSlug] = useState<string | null>(null); // Store slug after resolving
+  const { slug } = params; // Directly destructure slug
   const [product, setProduct] = useState<Product | null>(null);
 
   useEffect(() => {
-    const resolveParams = async () => {
-      const resolvedParams = await params; // Resolve the promise
-      setSlug(resolvedParams.slug); // Extract slug
-    };
-    resolveParams();
-  }, [params]);
-
-  useEffect(() => {
-    if (slug) {
-      const fetchData = async () => {
+    const fetchData = async () => {
+      if (slug) {
         const fetchedProduct = await getProduct(slug);
         setProduct(fetchedProduct);
-      };
-      fetchData();
-    }
+      }
+    };
+    fetchData();
   }, [slug]);
-
-  if (!slug) {
-    return (
-      <div className="max-w-7xl mx-auto px-4">
-        <p className="text-center text-gray-500 text-xl">
-          Loading product information...
-        </p>
-      </div>
-    );
-  }
 
   if (!product) {
     return (
       <div className="max-w-7xl mx-auto px-4">
         <p className="text-center text-red-500 text-2xl">
-          Product not found. Please check the URL or try again later.
+          {slug ? "Product not found. Please try again later." : "Loading product information..."}
         </p>
       </div>
     );
@@ -106,7 +88,6 @@ export default function ProductPage({ params }: ProductPageProps) {
               />
             )}
           </div>
-
           <div className="flex flex-col justify-center gap-6">
             <h1 className="text-5xl font-bold text-gray-800">{product.title}</h1>
             <p className="text-xl font-semibold text-green-600">${product.price}</p>

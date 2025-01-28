@@ -1,16 +1,19 @@
-'use client';
-
-import { Product } from "@/types/products";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import { addToCart } from "../../actions/actions"; 
-import Swal from "sweetalert2";
-import Navbar from "@/app/components/Navbar";
-import Navbar2 from "@/app/components/Navbar2";
-import Footer from "@/app/components/Footer";
-import Image from "next/image";
+import { Product } from "@/types/products";
 import React from "react";
 
+interface ProductPageProps {
+  params: { slug: string }; // Define the slug parameter
+}
+
+// Fetch all possible slugs for static generation
+export async function generateStaticParams() {
+  const slugs = await client.fetch(`*[_type == "products"].slug.current`);
+  return slugs.map((slug: string) => ({ slug }));
+}
+
+// Fetch product details based on slug
 async function getProduct(slug: string): Promise<Product | null> {
   if (!slug) {
     console.error("Slug is not available.");
@@ -29,23 +32,9 @@ async function getProduct(slug: string): Promise<Product | null> {
   );
 }
 
-interface ProductPageProps {
-  params: Promise<{ slug: string }>; // Updated to reflect `Promise`
-}
-
-export default function ProductPage({ params }: ProductPageProps) {
-  const resolvedParams = React.use(params); // Unwrapping the params Promise
-  const { slug } = resolvedParams;
-
-  const [product, setProduct] = React.useState<Product | null>(null);
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const fetchedProduct = await getProduct(slug);
-      setProduct(fetchedProduct);
-    };
-    fetchData();
-  }, [slug]);
+export default async function ProductPage({ params }: ProductPageProps) {
+  const { slug } = params; // Destructure slug
+  const product = await getProduct(slug); // Fetch product data
 
   if (!product) {
     return (
@@ -57,33 +46,15 @@ export default function ProductPage({ params }: ProductPageProps) {
     );
   }
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (product) {
-      addToCart(product);
-      Swal.fire({
-        position: "top-right",
-        icon: "success",
-        title: `${product.title} has been added to your cart!`,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
-  };
-
   return (
     <div className="bg-gray-50 min-h-screen">
-      <Navbar />
-      <Navbar2 />
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
           <div className="flex justify-center items-center">
             {product.image && (
-              <Image
+              <img
                 src={urlFor(product.image).url()}
                 alt={product.title}
-                width={600}
-                height={600}
                 className="rounded-lg shadow-lg transform transition duration-300 hover:scale-105"
               />
             )}
@@ -93,18 +64,9 @@ export default function ProductPage({ params }: ProductPageProps) {
             <h1 className="text-5xl font-bold text-gray-800">{product.title}</h1>
             <p className="text-xl font-semibold text-green-600">${product.price}</p>
             <p className="text-lg text-gray-700">{product.description}</p>
-            <div className="mt-6">
-              <button
-                onClick={handleAddToCart}
-                className="w-full py-3 bg-blue-600 text-white font-semibold text-lg rounded-md hover:bg-blue-700 transition duration-300"
-              >
-                Add to Cart
-              </button>
-            </div>
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
