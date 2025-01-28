@@ -3,7 +3,7 @@
 import { Product } from "@/types/products";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import { addToCart } from "../../actions/actions"; // import your addToCart action
+import { addToCart } from "../../actions/actions"; 
 import Swal from "sweetalert2";
 import Navbar from "@/app/components/Navbar";
 import Navbar2 from "@/app/components/Navbar2";
@@ -16,7 +16,6 @@ async function getProduct(slug: string): Promise<Product | null> {
     console.error("Slug is not available.");
     return null;
   }
-  // Fetch product based on slug
   return client.fetch(
     `*[_type == "products" && slug.current == $slug][0]{
       _id,
@@ -31,13 +30,13 @@ async function getProduct(slug: string): Promise<Product | null> {
 }
 
 interface ProductPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>; // Updated to reflect `Promise`
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  const { slug } = params;
+  const resolvedParams = React.use(params); // Unwrapping the params Promise
+  const { slug } = resolvedParams;
 
-  // Fetch the product
   const [product, setProduct] = React.useState<Product | null>(null);
 
   React.useEffect(() => {
@@ -58,7 +57,6 @@ export default function ProductPage({ params }: ProductPageProps) {
     );
   }
 
-  // Add to cart handler
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     if (product) {
@@ -79,7 +77,6 @@ export default function ProductPage({ params }: ProductPageProps) {
       <Navbar2 />
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-          {/* Product Image Section */}
           <div className="flex justify-center items-center">
             {product.image && (
               <Image
@@ -92,14 +89,13 @@ export default function ProductPage({ params }: ProductPageProps) {
             )}
           </div>
 
-          {/* Product Details Section */}
           <div className="flex flex-col justify-center gap-6">
             <h1 className="text-5xl font-bold text-gray-800">{product.title}</h1>
             <p className="text-xl font-semibold text-green-600">${product.price}</p>
             <p className="text-lg text-gray-700">{product.description}</p>
             <div className="mt-6">
               <button
-                onClick={handleAddToCart} // This is now on the client-side
+                onClick={handleAddToCart}
                 className="w-full py-3 bg-blue-600 text-white font-semibold text-lg rounded-md hover:bg-blue-700 transition duration-300"
               >
                 Add to Cart
