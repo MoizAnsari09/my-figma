@@ -30,21 +30,40 @@ async function getProduct(slug: string): Promise<Product | null> {
 }
 
 interface ProductPageProps {
-  params: { slug: string }; // Updated type
+  params: Promise<{ slug: string }>; // Adjusted type
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  const { slug } = params; // Access slug directly
-
+  const [slug, setSlug] = useState<string | null>(null); // Store slug after resolving
   const [product, setProduct] = useState<Product | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const fetchedProduct = await getProduct(slug);
-      setProduct(fetchedProduct);
+    const resolveParams = async () => {
+      const resolvedParams = await params; // Resolve the promise
+      setSlug(resolvedParams.slug); // Extract slug
     };
-    fetchData();
+    resolveParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (slug) {
+      const fetchData = async () => {
+        const fetchedProduct = await getProduct(slug);
+        setProduct(fetchedProduct);
+      };
+      fetchData();
+    }
   }, [slug]);
+
+  if (!slug) {
+    return (
+      <div className="max-w-7xl mx-auto px-4">
+        <p className="text-center text-gray-500 text-xl">
+          Loading product information...
+        </p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
