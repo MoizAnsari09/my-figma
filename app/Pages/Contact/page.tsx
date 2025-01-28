@@ -1,7 +1,7 @@
 import Footer2 from "@/app/components/Footer2";
 import Navbar from "@/app/components/Navbar";
 import Navbar2 from "@/app/components/Navbar2";
-import Image from "next/image";
+
 
 export default function ContactUs() {
   return (
