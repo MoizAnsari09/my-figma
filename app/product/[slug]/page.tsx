@@ -8,7 +8,7 @@ import Image from "next/image";
 import { addToCart } from "../../actions/actions";
 
 interface ProductPageProps {
-  params: { slug: string };
+  params: Readonly<Record<string, string>>; // ✅ Fixed Type
 }
 
 // Fetch product data
@@ -19,14 +19,14 @@ async function getProduct(slug: string): Promise<Product> {
       title,
       image,
       price,
-      description,
+      description  // ✅ Fixed extra comma issue
     }`,
     { slug }
   );
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = params;
+  const slug = params["slug"]; // ✅ Fixed params access
   const product = await getProduct(slug);
 
   // Add to cart function
@@ -63,7 +63,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <p className="text-2xl font-semibold text-gray-700">${product.price}</p>
 
           {/* Product Description */}
-          <p className="text-gray-600">{product.description}</p>  {/* 🆕 Description Display */}
+          <p className="text-gray-600">{product.description}</p>  {/* ✅ Fixed description display */}
 
           {/* Add to Cart Button */}
           <button
