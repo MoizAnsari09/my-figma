@@ -1,70 +1,77 @@
+"use client";
+
+import Swal from "sweetalert2";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { Product } from "@/types/products";
-import React from "react";
+import Image from "next/image";
+import { addToCart } from "../../actions/actions";
 
 interface ProductPageProps {
-  params: { slug: string }; // Define the slug parameter
+  params: { slug: string };
 }
 
-// Fetch all possible slugs for static generation
-export async function generateStaticParams() {
-  const slugs = await client.fetch(`*[_type == "products"].slug.current`);
-  return slugs.map((slug: string) => ({ slug }));
-}
-
-// Fetch product details based on slug
-async function getProduct(slug: string): Promise<Product | null> {
-  if (!slug) {
-    console.error("Slug is not available.");
-    return null;
-  }
-  return client.fetch(
+// Fetch product data
+async function getProduct(slug: string): Promise<Product> {
+  return await client.fetch(
     `*[_type == "products" && slug.current == $slug][0]{
       _id,
       title,
-      _type,
       image,
       price,
-      description
+      description,
     }`,
     { slug }
   );
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = params; // Destructure slug
-  const product = await getProduct(slug); // Fetch product data
+  const { slug } = params;
+  const product = await getProduct(slug);
 
-  if (!product) {
-    return (
-      <div className="max-w-7xl mx-auto px-4">
-        <p className="text-center text-red-500 text-2xl">
-          Product not found. Please check the URL or try again later.
-        </p>
-      </div>
-    );
-  }
+  // Add to cart function
+  const handleAddToCart = (product: Product) => {
+    addToCart(product);
+    Swal.fire({
+      position: "top-right",
+      icon: "success",
+      title: `${product.title} has been added to your cart!`,
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-          <div className="flex justify-center items-center">
-            {product.image && (
-              <img
-                src={urlFor(product.image).url()}
-                alt={product.title}
-                className="rounded-lg shadow-lg transform transition duration-300 hover:scale-105"
-              />
-            )}
-          </div>
+    <div className="max-w-7xl mx-auto px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        {/* Product Image */}
+        <div className="aspect-square">
+          {product.image && (
+            <Image
+              src={urlFor(product.image).url()}
+              alt={`Product Image of ${product.title}`}
+              width={500}
+              height={500}
+              className="rounded-lg shadow-md"
+            />
+          )}
+        </div>
 
-          <div className="flex flex-col justify-center gap-6">
-            <h1 className="text-5xl font-bold text-gray-800">{product.title}</h1>
-            <p className="text-xl font-semibold text-green-600">${product.price}</p>
-            <p className="text-lg text-gray-700">{product.description}</p>
-          </div>
+        {/* Product Details */}
+        <div className="flex flex-col gap-6">
+          <h1 className="text-4xl font-bold">{product.title}</h1>
+          <p className="text-2xl font-semibold text-gray-700">${product.price}</p>
+
+          {/* Product Description */}
+          <p className="text-gray-600">{product.description}</p>  {/* 🆕 Description Display */}
+
+          {/* Add to Cart Button */}
+          <button
+            className="mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-xl hover:scale-110 transition-transform duration-300 ease-in-out w-full"
+            onClick={() => handleAddToCart(product)}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>

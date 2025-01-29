@@ -14,7 +14,7 @@ export interface Product {
     price: number;
     description?: string;
     slug : {
-        type: "slug";
+    _type: "slug";
         current: "string";
     };
     inventory:number;
