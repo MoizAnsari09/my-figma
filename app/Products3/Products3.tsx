@@ -8,9 +8,17 @@ import React from "react";
 import { addToCart } from "../actions/actions";
 import Link from "next/link";
 
-const Products3 = ({ products14, products124, products18, products15 }: { products14: Product[], products124: Product[], products18: Product[], products15: Product[] }) => {
-
-  // Handle add to cart action
+const Products3 = ({
+  products14,
+  products124,
+  products18,
+  products15,
+}: {
+  products14: Product[];
+  products124: Product[];
+  products18: Product[];
+  products15: Product[];
+}) => {
   const handleAddToCart = (e: React.MouseEvent, product: Product) => {
     e.preventDefault();
     addToCart(product);
@@ -23,13 +31,14 @@ const Products3 = ({ products14, products124, products18, products15 }: { produc
     });
   };
 
-  // Render product list sections
   const renderProducts = (products: Product[], title: string) => (
     <section className="mb-16 py-8">
-      <h2 className="text-3xl font-semibold text-center mb-8 text-gray-800">{title}</h2>
+      <h2 className="text-3xl font-semibold text-center mb-8 text-gray-800">
+        {title}
+      </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-8">
         {products.map((product) => (
-          <Link href={`/product/${product.slug.current}`} key={product._id}>
+          <Link href={`/product/${product.slug.current}`} key={product.id || product.slug.current}>
             <div className="bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:shadow-xl hover:scale-105 cursor-pointer">
               {product.image && (
                 <Image
@@ -41,7 +50,9 @@ const Products3 = ({ products14, products124, products18, products15 }: { produc
                 />
               )}
 
-              <h3 className="mt-2 text-lg font-semibold text-gray-800">{product.title}</h3>
+              <h3 className="mt-2 text-lg font-semibold text-gray-800">
+                {product.title}
+              </h3>
               <p className="text-gray-500 mt-1">Price: ${product.price}</p>
               <button
                 className="mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-xl hover:scale-110 transition-transform duration-300 ease-in-out w-full"
@@ -56,7 +67,6 @@ const Products3 = ({ products14, products124, products18, products15 }: { produc
     </section>
   );
 
-  // Render "Explore" section
   const renderExploreSection = (products: Product[], title: string) => (
     <section className="mb-16 py-8">
       <div className="text-center mb-8">
@@ -75,8 +85,8 @@ const Products3 = ({ products14, products124, products18, products15 }: { produc
           )}
         </div>
         <div className="md:w-1/2 grid grid-cols-2 gap-4">
-          {products.slice(1).map((product) => (
-            <div key={product._id} className="h-72 w-full">
+          {products.slice(1).map((product, index) => (
+            <div key={product.id || product.slug.current || index} className="h-72 w-full">
               {product.image && (
                 <Image
                   src={urlFor(product.image).url()}

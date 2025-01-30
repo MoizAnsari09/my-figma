@@ -1,21 +1,21 @@
 
 
 export interface Product {
-    _id : string;
+    id : string;
     title: string;
-    _type: "products";
-    image?:{
+    type: "products";
+    image:{
         asset:{
-            _ref: string;
-            _type: "image";
+            ref: string;
+            type: "image";
             
         }
     };
     price: number;
     description: string;
     slug : {
-    _type: "slug";
-        current: "string";
+    type: "slug";
+        current: string;
     };
     inventory:number;
 }
