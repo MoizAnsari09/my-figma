@@ -37,10 +37,12 @@ const Products3 = ({
         {title}
       </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-8">
-        {products.map((product) => (
-          
-            <div className="bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:shadow-xl hover:scale-105 cursor-pointer">
-            <Link href={`/product/${product.slug.current}`} key={product.id}>
+        {products.map((product, index) => (
+          <div
+            key={product.id || product.slug.current || index} // Unique key
+            className="bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:shadow-xl hover:scale-105 cursor-pointer"
+          >
+            <Link href={`/product/${product.slug.current}`}>
               {product.image && (
                 <Image
                   src={urlFor(product.image).url()}
@@ -61,9 +63,8 @@ const Products3 = ({
               >
                 Add to Cart
               </button>
-              </Link>
-            </div>
-          
+            </Link>
+          </div>
         ))}
       </div>
     </section>
@@ -88,7 +89,10 @@ const Products3 = ({
         </div>
         <div className="md:w-1/2 grid grid-cols-2 gap-4">
           {products.slice(1).map((product, index) => (
-            <div key={product.id || product.slug.current || index} className="h-72 w-full">
+            <div
+              key={product.id || product.slug.current || index} // Unique key
+              className="h-72 w-full"
+            >
               {product.image && (
                 <Image
                   src={urlFor(product.image).url()}

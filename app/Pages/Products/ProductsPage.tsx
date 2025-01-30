@@ -4,12 +4,14 @@ import Swal from "sweetalert2";
 import { urlFor } from "@/sanity/lib/image";
 import { Product } from "@/types/products";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { addToCart } from "../../actions/actions";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Navbar2 from "@/app/components/Navbar2";
 import Footer2 from "@/app/components/Footer2";
+import { client } from "@/sanity/lib/client";
+import { Products124 } from "@/sanity/lib/queries";
 
 const ProductsPage = ({ products14, products18 }: { products14: Product[], products18: Product[] }) => {
 
@@ -25,6 +27,15 @@ const ProductsPage = ({ products14, products18 }: { products14: Product[], produ
       timer: 1500,
     });
   };
+  const [products, setProducts] = useState<Product[]>([]);
+
+useEffect(() => {
+  async function fetchProducts() {
+    const fetchedProducts: Product[] = await client.fetch(Products124);
+    setProducts(fetchedProducts);
+  }
+  fetchProducts();
+}, []);
 
   return (
     <div className="bg-gray-50 min-h-screen">
