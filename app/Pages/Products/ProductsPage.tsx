@@ -36,8 +36,9 @@ const ProductsPage = ({ products14, products18 }: { products14: Product[], produ
           <h2 className="text-3xl font-semibold text-center mb-8 text-gray-800">Additional Products</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6">
             {products18.map((product) => (
-              <Link href={`/product/${product.slug.current}`} key={product.id}>
+              
                 <div className="bg-white shadow-lg rounded-lg p-4 transform transition duration-300 hover:shadow-xl hover:scale-105 cursor-pointer">
+                  <Link href={`/product/${product.slug.current}`} key={product.id}>
                   {product.image && (
                     <Image
                       src={urlFor(product.image).url()}
@@ -55,8 +56,9 @@ const ProductsPage = ({ products14, products18 }: { products14: Product[], produ
                   >
                     Add to Cart
                   </button>
+                  </Link>
                 </div>
-              </Link>
+              
             ))}
           </div>
         </section>

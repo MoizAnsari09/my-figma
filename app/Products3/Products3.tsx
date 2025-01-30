@@ -38,8 +38,9 @@ const Products3 = ({
       </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-8">
         {products.map((product) => (
-          <Link href={`/product/${product.slug.current}`} key={product.id || product.slug.current}>
+          
             <div className="bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:shadow-xl hover:scale-105 cursor-pointer">
+            <Link href={`/product/${product.slug.current}`} key={product.id}>
               {product.image && (
                 <Image
                   src={urlFor(product.image).url()}
@@ -60,8 +61,9 @@ const Products3 = ({
               >
                 Add to Cart
               </button>
+              </Link>
             </div>
-          </Link>
+          
         ))}
       </div>
     </section>
