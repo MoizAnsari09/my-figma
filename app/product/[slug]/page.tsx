@@ -20,10 +20,12 @@ export default function ProductPage({ params }: ProductPageProps) {
 
   useEffect(() => {
     async function fetchProduct() {
+      console.log("Fetching product for slug:", slug); // Debug slug
       const data = await client.fetch(
         groq`*[_type == "products" && slug.current == $slug][0]{_id, title, image, price, description}`,
         { slug }
       );
+      console.log("Fetched product:", data); // Debug fetched data
       setProduct(data);
     }
     fetchProduct();
@@ -59,9 +61,9 @@ export default function ProductPage({ params }: ProductPageProps) {
         </div>
 
         <div className="flex flex-col gap-6">
-          <h1 className="text-4xl font-bold">{product?.title}</h1>
+          <h1 className="text-4xl font-bold">${product?.title}</h1>
           <p className="text-2xl font-sans text-gray-700">${product?.price}</p>
-          <p className="text-lg text-gray-600">{product?.description}</p>
+          <p className="text-lg text-gray-600">${product?.description}</p>
           <button
             className="mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-xl hover:scale-110 transition-transform duration-300 ease-in-out w-full"
             onClick={handleAddToCart}
