@@ -6,7 +6,8 @@ import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Navbar2 from "./components/Navbar2";
 import Footer2 from "./components/Footer2";
-import Products3 from "./components/Products3";
+
+import Page from "./Products3/page";
 // import Products from "./components/Products";
 
 
@@ -18,7 +19,7 @@ export default function Home (){
       <Navbar/>
       <Navbar2/>
       <Benner/>
-     <Products3/>
+     <Page/>
      <Footer2/>
      
     </div>
