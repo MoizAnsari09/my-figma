@@ -125,15 +125,14 @@ const Products3 = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <Navbar />
-      <Navbar2 />
+      
       <div className="container mx-auto py-16 px-6">
         {renderProducts(products14, "Featured Products")}
         {renderProducts(products124, "Category Products")}
         {renderExploreSection(products15, "Explore Popular Styles")}
         {renderProducts(products18, "Additional Products")}
       </div>
-      <Footer />
+      
     </div>
   );
 };
