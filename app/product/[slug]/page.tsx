@@ -1,3 +1,6 @@
+// Add 'use client' at the top to mark this file as a Client Component
+'use client';
+
 import { addToCart } from "@/app/actions/actions";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
@@ -6,14 +9,9 @@ import Image from "next/image";
 import { FiShoppingCart } from "react-icons/fi";
 import Swal from "sweetalert2";
 
-
-
-
 interface ProductPageProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string }; // Adjusted to sync with client-side usage
 }
-
-// Tabnine | Edit | Test | Explain | Document | Pieces: Comment | Pieces: Explain
 
 async function getProduct(slug: string): Promise<Product> {
   return client.fetch(
@@ -29,49 +27,51 @@ async function getProduct(slug: string): Promise<Product> {
   );
 }
 
+// Handle adding product to the cart
 const handleAddToCart = (e: React.MouseEvent, product: Product) => {
-    e.preventDefault();
-    addToCart(product);
-    Swal.fire({
-      position: "top-right",
-      icon: "success",
-      title: `${product.title} has been added to your cart!`,
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  };
-
+  e.preventDefault();
+  addToCart(product); // Assuming addToCart is a function that adds the product to a global cart state
+  Swal.fire({
+    position: "top-right",
+    icon: "success",
+    title: `${product.title} has been added to your cart!`,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+};
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = await params; // Destructure slug from params
+  const { slug } = params; // Destructure slug from params
   const product = await getProduct(slug);
 
   return (
     <div className="max-w-7xl mx-auto px-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div className="aspect-square">
-          {product.image && ( // Use optional chaining and check if image exists
+          {product.image && (
             <Image
               src={urlFor(product.image).url()}
-              alt={product.title || "Product Image"} // Provide a default alt text
+              alt={product.title || "Product Image"}
               width={500}
               height={500}
-              className="rounded-lg shadow-md" // Corrected class name: rounded-lg
+              className="rounded-lg shadow-md"
             />
           )}
         </div>
-          <div className="flex flex-col gap-8">
-            <h1 className="text-4xl font-bold">
-              {product.title} {/* Display product name */}
-            </h1>
-            <p>
-              ${product.price} {/* Display product price */}
-            </p>
-            <h3>
-              {product.description}
-            </h3>
-           
-          </div>
+        <div className="flex flex-col gap-8">
+          <h1 className="text-4xl font-bold">{product.title}</h1>
+          <p className="text-xl text-gray-600">${product.price}</p>
+          <p>{product.description}</p>
+
+          {/* Add to Cart Button */}
+          <button
+            onClick={(e) => handleAddToCart(e, product)}
+            className="flex items-center justify-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+          >
+            <FiShoppingCart className="mr-2" />
+            Add to Cart
+          </button>
+        </div>
       </div>
     </div>
   );
