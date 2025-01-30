@@ -20,14 +20,14 @@ const CartPage = () => {
   };
 
   const handleIncrement = (id: string) => {
-    const product = cartItems.find((item) => item._id === id);
+    const product = cartItems.find((item) => item.id === id);
     if (product) {
       handleQuantityChange(id, product.inventory + 1);
     }
   };
 
   const handleDecrement = (id: string) => {
-    const product = cartItems.find((item) => item._id === id);
+    const product = cartItems.find((item) => item.id === id);
     if (product && product.inventory > 1) {
       handleQuantityChange(id, product.inventory - 1);
     }
@@ -84,7 +84,7 @@ const CartPage = () => {
           <div className="space-y-4">
             {cartItems.map((item) => (
               <div
-                key={item._id}
+                key={item.id}
                 className="flex flex-col sm:flex-row items-center justify-between bg-gray-50 p-4 rounded shadow-sm"
               >
                 <div className="flex items-center space-x-4">
@@ -108,21 +108,21 @@ const CartPage = () => {
                 </div>
                 <div className="flex items-center space-x-2 mt-4 sm:mt-0">
                   <button
-                    onClick={() => handleDecrement(item._id)}
+                    onClick={() => handleDecrement(item.id)}
                     className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none"
                   >
                     -
                   </button>
                   <span className="px-4 py-1 bg-gray-100 border rounded">{item.inventory}</span>
                   <button
-                    onClick={() => handleIncrement(item._id)}
+                    onClick={() => handleIncrement(item.id)}
                     className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none"
                   >
                     +
                   </button>
                 </div>
                 <button
-                  onClick={() => handleRemove(item._id)}
+                  onClick={() => handleRemove(item.id)}
                   className="mt-4 sm:mt-0 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none"
                 >
                   Remove
