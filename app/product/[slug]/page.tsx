@@ -2,7 +2,7 @@ import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { Product } from "@/types/products";
 import Image from "next/image";
-import AddToCartButton from "@/components/AddToCartButton"; // نیا کلائنٹ کمپوننٹ امپورٹ کریں
+import AddToCartButton from "@/components/AddToCartButton";
 
 interface ProductPageProps {
   params: { slug: string };
@@ -22,8 +22,10 @@ async function getProduct(slug: string): Promise<Product> {
   );
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = await params;
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params; // ✅ یہاں `params` کو `await` کیا گیا ہے
+  const { slug } = resolvedParams;
+  
   const product = await getProduct(slug);
 
   return (
