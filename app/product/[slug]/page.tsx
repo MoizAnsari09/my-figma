@@ -43,13 +43,11 @@ export default function ProductPage({ params }: ProductPageProps) {
     }
   };
 
-  if (!product) return <p>Loading...</p>;
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div className="aspect-square">
-          {product.image && (
+          {product?.image && (
             <Image
               src={urlFor(product.image).url()}
               alt={product.title}
@@ -61,9 +59,9 @@ export default function ProductPage({ params }: ProductPageProps) {
         </div>
 
         <div className="flex flex-col gap-6">
-          <h1 className="text-4xl font-bold">{product.title}</h1>
-          <p className="text-2xl font-sans text-gray-700">${product.price}</p>
-          <p className="text-lg text-gray-600">{product.description}</p>
+          <h1 className="text-4xl font-bold">{product?.title}</h1>
+          <p className="text-2xl font-sans text-gray-700">${product?.price}</p>
+          <p className="text-lg text-gray-600">{product?.description}</p>
           <button
             className="mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-xl hover:scale-110 transition-transform duration-300 ease-in-out w-full"
             onClick={handleAddToCart}
