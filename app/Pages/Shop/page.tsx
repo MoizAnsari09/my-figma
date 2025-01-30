@@ -1,9 +1,13 @@
+"use client";
+
 import { FiShoppingCart } from "react-icons/fi";
 import Footer from "../../components/Footer";
 import Image from "next/image";
 import Navbar from "../../components/Navbar";
 import Navbar2 from "../../components/Navbar2";
 import Footer2 from "../../components/Footer2";
+import Swal from "sweetalert2";
+import { addToCart } from "../../actions/actions"; // Import addToCart function
 
 const products1 = [
   { id: 1, name: "Product Name 1", price: "$20.00", tag: "New", image: "/chair/0.png" },
@@ -18,7 +22,18 @@ const products = [
   { id: 6, name: "Library Stool Chair", price: "$20", tag: "", image: "/chair/1 (4).png" },
 ];
 
-export default function Home() {
+const Home = () => {
+  const handleAddToCart = (product: any) => {
+    addToCart(product);
+    Swal.fire({
+      position: "top-right",
+      icon: "success",
+      title: `${product.name} has been added to your cart!`,
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
+
   return (
     <div>
       <Navbar />
@@ -47,7 +62,10 @@ export default function Home() {
                 <p className="text-gray-700 mb-4 text-center md:text-left">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias reprehenderit dolorem non.
                 </p>
-                <button className="w-[212px] h-[63px] px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 flex items-center justify-center text-[20px]">
+                <button
+                  className="w-[212px] h-[63px] px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 flex items-center justify-center text-[20px]"
+                  onClick={() => handleAddToCart(product1)}
+                >
                   <FiShoppingCart className="w-[29px] h-[29px] mr-2" />
                   Add to Cart
                 </button>
@@ -80,6 +98,13 @@ export default function Home() {
                   {product.tag}
                 </span>
               )}
+              <button
+                className="mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out w-full flex items-center justify-center"
+                onClick={() => handleAddToCart(product)}
+              >
+                <FiShoppingCart className="w-5 h-5 mr-2" />
+                Add to Cart
+              </button>
             </div>
           ))}
         </div>
@@ -90,4 +115,6 @@ export default function Home() {
       <Footer2 />
     </div>
   );
-}
+};
+
+export default Home;
