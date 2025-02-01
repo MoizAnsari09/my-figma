@@ -2,6 +2,7 @@ import { groq } from "next-sanity";
 
 
 
+export const SingleProduct = groq`*[_type == "products"][0]`;
 export const Products15 = groq`*[_type == "products"][6..10]`;
 export const AllProducts = groq`*[_type == "products"]`;
 export const Products14 = groq`*[_type == "products"][0..3]`;

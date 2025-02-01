@@ -103,7 +103,8 @@ const CartPage = () => {
                   )}
                   <div>
                     <h2 className="text-lg font-medium">{item.title}</h2>
-                    <p className="text-gray-500">${item.price.toFixed(2)}</p>
+                    <p className="text-gray-500">${item.price}</p>
+                    <p className="text-gray-500 mt-1">{item.tags}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2 mt-4 sm:mt-0">

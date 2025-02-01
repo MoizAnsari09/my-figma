@@ -1,5 +1,6 @@
 "use client";
 
+
 import Swal from "sweetalert2";
 import { urlFor } from "@/sanity/lib/image";
 import { Product } from "@/types/products";
@@ -7,6 +8,8 @@ import Image from "next/image";
 import React from "react";
 import { addToCart } from "../actions/actions";
 import Link from "next/link";
+import { useAuth } from "@/app/components/AuthContext";
+import { useRouter } from "next/navigation";
 
 const Products3 = ({
   products14,
@@ -19,8 +22,22 @@ const Products3 = ({
   products18: Product[];
   products15: Product[];
 }) => {
+  const { user } = useAuth(); // Get authentication status
+  const router = useRouter(); // For redirection
+
   const handleAddToCart = (e: React.MouseEvent, product: Product) => {
     e.preventDefault();
+    if (!user) {
+      Swal.fire({
+        icon: "warning",
+        title: "You must sign in first!",
+        text: "Please log in to add items to your cart.",
+        showConfirmButton: true,
+      }).then(() => {
+        router.push("/signin");
+      });
+      return;
+    }
     addToCart(product);
     Swal.fire({
       position: "top-right",
@@ -39,10 +56,10 @@ const Products3 = ({
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-8">
         {products.map((product, index) => (
           <div
-            key={product.id || product.slug.current || index} // Unique key
+            key={product.id || product.slug.current || index}
             className="bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:shadow-xl hover:scale-105 cursor-pointer"
           >
-            <Link href={`/product/${product.slug.current}`}>
+            <Link href={user ? `/product/${product.slug.current}` : "/signin"}>
               {product.image && (
                 <Image
                   src={urlFor(product.image).url()}
@@ -52,11 +69,11 @@ const Products3 = ({
                   className="rounded-md object-cover w-full h-56 mb-4"
                 />
               )}
-
               <h3 className="mt-2 text-lg font-semibold text-gray-800">
                 {product.title}
               </h3>
               <p className="text-gray-500 mt-1">Price: ${product.price}</p>
+              <p className="text-gray-500 mt-1">{product.tags}</p>
               <button
                 className="mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-xl hover:scale-110 transition-transform duration-300 ease-in-out w-full"
                 onClick={(e) => handleAddToCart(e, product)}
@@ -68,46 +85,45 @@ const Products3 = ({
         ))}
       </div>
     </section>
-  );
-
-  const renderExploreSection = (products: Product[], title: string) => (
-    <section className="mb-16 py-8">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-semibold text-gray-800">{title}</h2>
-      </div>
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="md:w-1/2">
-          {products[0]?.image && (
-            <Image
-              src={urlFor(products[0].image).url()}
-              alt={products[0].title}
-              width={600}
-              height={600}
-              className="w-full h-auto rounded-md object-cover shadow-lg"
-            />
-          )}
+  )
+    const renderExploreSection = (products: Product[], title: string) => (
+      <section className="mb-16 py-8">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-semibold text-gray-800">{title}</h2>
         </div>
-        <div className="md:w-1/2 grid grid-cols-2 gap-4">
-          {products.slice(1).map((product, index) => (
-            <div
-              key={product.id || product.slug.current || index} // Unique key
-              className="h-72 w-full"
-            >
-              {product.image && (
-                <Image
-                  src={urlFor(product.image).url()}
-                  alt={product.title}
-                  width={300}
-                  height={300}
-                  className="w-full h-full rounded-md object-cover shadow-md"
-                />
-              )}
-            </div>
-          ))}
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="md:w-1/2">
+            {products[0]?.image && (
+              <Image
+                src={urlFor(products[0].image).url()}
+                alt={products[0].title}
+                width={600}
+                height={600}
+                className="w-full h-auto rounded-md object-cover shadow-lg"
+              />
+            )}
+          </div>
+          <div className="md:w-1/2 grid grid-cols-2 gap-4">
+            {products.slice(1).map((product, index) => (
+              <div
+                key={product.id || product.slug.current || index} // Unique key
+                className="h-80 w-full"
+              >
+                {product.image && (
+                  <Image
+                    src={urlFor(product.image).url()}
+                    alt={product.title}
+                    width={300}
+                    height={300}
+                    className="w-full h-full rounded-md object-cover shadow-md"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
-  );
+      </section>
+    );
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -115,6 +131,7 @@ const Products3 = ({
         {renderProducts(products14, "Featured Products")}
         {renderProducts(products124, "Category Products")}
         {renderExploreSection(products15, "Explore Popular Styles")}
+        
         {renderProducts(products18, "Additional Products")}
       </div>
     </div>
@@ -122,3 +139,84 @@ const Products3 = ({
 };
 
 export default Products3;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
