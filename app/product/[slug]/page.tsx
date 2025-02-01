@@ -7,49 +7,53 @@ import Image from "next/image";
 import AddToCartButton from "@/components/AddToCartButton";
 import { useAuth } from "@/app/components/AuthContext";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-// Define the interface to specify the expected params type
-interface ProductPageProps {
-  params: { slug: string };
+// Define the expected type for params
+interface ProductPageParams {
+  slug: string;
 }
 
-async function getProduct(slug: string): Promise<Product> {
-  return client.fetch(
-    `*[_type == "products" && slug.current == $slug][0]{
-      _id,
-      title,
-      _type,
-      image,
-      price,
-      description,
-      tags
-    }`,
-    { slug }
-  );
+async function getProduct(slug: string): Promise<Product | null> {
+  try {
+    return await client.fetch(
+      `*[_type == "products" && slug.current == $slug][0]{
+        _id,
+        title,
+        _type,
+        image,
+        price,
+        description,
+        tags
+      }`,
+      { slug }
+    );
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return null;
+  }
 }
 
-export default function ProductPage({ params }: ProductPageProps) {
+export default function ProductPage() {
   const { user } = useAuth(); // Get authentication status
   const router = useRouter(); // For redirection
+  const params = useParams() as unknown as ProductPageParams; // ✅ Fix: Ensure params have 'slug'
   const [product, setProduct] = useState<Product | null>(null);
 
-  const slug = params.slug; // Directly access slug from params
-
   useEffect(() => {
+    if (!params?.slug) return; // ✅ Ensure slug exists
     if (!user) {
       router.push("/signin"); // Redirect to Sign-In if not logged in
       return;
     }
 
     async function fetchProduct() {
-      if (slug) {  // Ensure slug exists before fetching the product
-        const fetchedProduct = await getProduct(slug);
-        setProduct(fetchedProduct);
-      }
+      const fetchedProduct = await getProduct(params.slug);
+      setProduct(fetchedProduct);
     }
+
     fetchProduct();
-  }, [user, slug, router]); // Depend on slug to re-fetch if it changes
+  }, [params?.slug, user, router]);
 
   if (!product) {
     return <p className="text-center py-10">Loading product...</p>;
