@@ -25,6 +25,7 @@ const Home = () => {
     async function fetchProducts() {
       try {
         const fetchedProducts: Product[] = await client.fetch(Products124);
+        console.log("Fetched Products:", fetchedProducts); // ✅ Debugging
         setProducts(fetchedProducts);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -33,23 +34,24 @@ const Home = () => {
   
     async function fetchTopCategories() {
       try {
-        const fetchedTopCategory: Product = await client.fetch(SingleProduct); 
+        const fetchedTopCategory: Product = await client.fetch(SingleProduct);
+        console.log("Fetched Top Category:", fetchedTopCategory); // ✅ Debugging
   
-        // چونکہ یہ ایک واحد پروڈکٹ ہے، اسے ایک array میں wrap کریں
         if (fetchedTopCategory) {
-          setProducts1([fetchedTopCategory]); 
+          setProducts1([fetchedTopCategory]);
         } else {
-          setProducts1([]); // اگر پروڈکٹ نہیں ملا تو خالی array سیٹ کریں
+          setProducts1([]);
         }
       } catch (error) {
         console.error("Error fetching top category:", error);
-        setProducts1([]); // Error ہونے پر بھی خالی array رکھیں
+        setProducts1([]);
       }
     }
   
     fetchProducts();
     fetchTopCategories();
   }, []);
+  
 
   // Handle add to cart action
   const handleAddToCart = (e: React.MouseEvent, product: Product) => {
