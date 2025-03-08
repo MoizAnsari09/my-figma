@@ -14,6 +14,7 @@ import { client } from "@/sanity/lib/client";
 import { Products124 } from "@/sanity/lib/queries";
 import { useAuth } from "@/app/components/AuthContext"; 
 import { useRouter } from "next/navigation"; // For navigation
+import Footer from "@/app/components/Footer";
 
 const ProductsPage = ({ products14, products18 }: { products14: Product[], products18: Product[] }) => {
   
@@ -57,6 +58,7 @@ const ProductsPage = ({ products14, products18 }: { products14: Product[], produ
 
   return (
     <div className="bg-gray-50 min-h-screen">
+      <Footer />
       <Navbar />
       <Navbar2 />
       <div className="container mx-auto py-16 px-6">

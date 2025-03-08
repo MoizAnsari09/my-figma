@@ -1,3 +1,4 @@
+import Footer from "@/app/components/Footer";
 import Footer2 from "@/app/components/Footer2";
 import Navbar from "@/app/components/Navbar";
 import Navbar2 from "@/app/components/Navbar2";
@@ -6,6 +7,7 @@ import Navbar2 from "@/app/components/Navbar2";
 export default function ContactUs() {
   return (
     <div className="bg-gray-100">
+      <Footer />
       <Navbar/>
       <Navbar2/>
       {/* Header Section */}

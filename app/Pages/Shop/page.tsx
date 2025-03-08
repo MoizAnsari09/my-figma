@@ -14,6 +14,7 @@ import { client } from "@/sanity/lib/client";
 import {  Products124, SingleProduct } from "@/sanity/lib/queries"; // Assuming Products18 contains the list of products
 import { useAuth } from "@/app/components/AuthContext";
 import { useRouter } from "next/navigation"; // For navigation
+import Footer from "@/app/components/Footer";
 
 const Home = () => {
   const { user } = useAuth(); // Get user from AuthContext
@@ -81,6 +82,7 @@ const Home = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
+      <Footer />
       <Navbar />
       <Navbar2 />
 
